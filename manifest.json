@@ -1,0 +1,13 @@
+{
+  "id": "/planilla-asignaciones/",
+  "name": "Planilla Asignaciones",
+  "short_name": "Asignaciones",
+  "description": "Asignaciones de la reunión Vida y Ministerio.",
+  "lang": "es-AR",
+  "start_url": "./#semanas",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f5f7",
+  "theme_color": "#3a4554",
+  "icons": [{ "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

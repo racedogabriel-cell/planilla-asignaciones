@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "title": "Ejemplo de programa — no es una publicación oficial",
+  "language": "es",
+  "weeks": [
+    {
+      "weekKey": "2026-09-07",
+      "dateLabel": "7-13 de septiembre (ejemplo)",
+      "startDate": "2026-09-07",
+      "endDate": "2026-09-13",
+      "bibleReading": "Ejemplo 1-2",
+      "openingSongNumber": 2,
+      "middleSongNumber": 10,
+      "closingSongNumber": 3,
+      "parts": [
+        {
+          "partKey": "tesoros-discurso",
+          "sectionType": "Treasures",
+          "number": 1,
+          "title": "Discurso de tesoros (ejemplo)",
+          "durationMinutes": 10,
+          "detailText": "",
+          "functionalId": "TreasuresTalk",
+          "sortOrder": 0
+        },
+        {
+          "partKey": "perlas",
+          "sectionType": "Treasures",
+          "number": 2,
+          "title": "Busquemos perlas escondidas",
+          "durationMinutes": 10,
+          "detailText": "",
+          "functionalId": "SpiritualGems",
+          "sortOrder": 1
+        },
+        {
+          "partKey": "lectura",
+          "sectionType": "Treasures",
+          "number": 3,
+          "title": "Lectura de la Biblia",
+          "durationMinutes": 4,
+          "detailText": "",
+          "functionalId": "BibleReading",
+          "sortOrder": 2
+        },
+        {
+          "partKey": "empiece",
+          "sectionType": "ApplyYourself",
+          "number": 4,
+          "title": "Empiece conversaciones",
+          "durationMinutes": 3,
+          "detailText": "",
+          "functionalId": "MinistryDemo",
+          "sortOrder": 3
+        },
+        {
+          "partKey": "discurso-min",
+          "sectionType": "ApplyYourself",
+          "number": 5,
+          "title": "Discurso",
+          "durationMinutes": 5,
+          "detailText": "",
+          "functionalId": "MinistryTalk",
+          "sortOrder": 4
+        },
+        {
+          "partKey": "necesidades",
+          "sectionType": "LivingAsChristians",
+          "number": 6,
+          "title": "Necesidades de la congregación",
+          "durationMinutes": 15,
+          "detailText": "",
+          "functionalId": "LocalNeeds",
+          "sortOrder": 5
+        },
+        {
+          "partKey": "estudio",
+          "sectionType": "LivingAsChristians",
+          "number": 7,
+          "title": "Estudio bíblico de la congregación",
+          "durationMinutes": 30,
+          "detailText": "",
+          "functionalId": "CongregationBibleStudy",
+          "sortOrder": 6
+        }
+      ]
+    }
+  ]
+}

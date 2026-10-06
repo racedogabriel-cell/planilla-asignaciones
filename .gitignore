@@ -1,0 +1,8 @@
+.DS_Store
+Thumbs.db
+.clasp.json
+*.log
+.vscode/
+.idea/
+tmp-*.png
+.tmp-*.png

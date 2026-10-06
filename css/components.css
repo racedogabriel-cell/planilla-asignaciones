@@ -1,0 +1,105 @@
+.button {
+  border: 0;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 9px;
+  padding: 10px 14px;
+  font-weight: 650;
+}
+.button:disabled { opacity: 0.5; cursor: not-allowed; }
+.button-secondary {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.button-danger { background: var(--danger); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px;
+}
+
+.toolbar {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.search, .field, select.field, textarea.field {
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+}
+
+.form-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.form-grid label, .stack label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 650;
+  color: var(--muted);
+}
+
+.notice {
+  border-left: 4px solid var(--accent);
+  padding: 12px 14px;
+  background: #fff8e7;
+  border-radius: 0 10px 10px 0;
+  color: #6d4c05;
+  font-size: 0.9rem;
+}
+
+.notice-error {
+  border-left-color: var(--danger);
+  background: #fef2f2;
+  color: #7f1d1d;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 99px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+
+.badge-ok { background: #e8f5e9; color: var(--ok); }
+.badge-warn { background: #fff4e0; color: var(--warning); }
+
+.data-table { width: 100%; border-collapse: collapse; text-align: left; }
+.data-table th {
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.data-table th, .data-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.9rem;
+}
+
+.empty-state { text-align: center; padding: 40px 16px; color: var(--muted); }
+
+.save-message { min-height: 1.2em; margin: 8px 0 0; font-size: 0.88rem; font-weight: 650; color: var(--ok); }
+.save-message.is-error { color: var(--danger); }
+
+@media (max-width: 700px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .button { width: 100%; }
+}

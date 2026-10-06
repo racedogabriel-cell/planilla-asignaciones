@@ -380,8 +380,16 @@ export function bindSemanas() {
     return start;
   }
 
+  /**
+   * Ancla el scroll en el contexto del campo ANTERIOR al que tiene el cursor,
+   * para que queden visibles el último de arriba y el que se está editando.
+   * Si es el primero, usa el propio campo.
+   */
   function keepFieldInView(el) {
-    const context = fieldContext(el);
+    const inputs = [...root.querySelectorAll('.person-combo-input')];
+    const index = inputs.indexOf(el);
+    const anchor = index > 0 ? inputs[index - 1] : el;
+    const context = fieldContext(anchor);
     const pane = root.querySelector('.week-editor-pane');
     if (pane) {
       const gap = 10;

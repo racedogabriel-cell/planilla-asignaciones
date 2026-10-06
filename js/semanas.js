@@ -111,7 +111,7 @@ export function bindSemanas() {
         const heading = showRooms
           ? `<div class="room-label">${room === 'Auxiliary' ? 'Sala auxiliar' : 'Auditorio principal'}</div>`
           : '';
-        return `${heading}${group.map((slot) => picker(slot, 'part')).join('')}`;
+        return `${heading}<div class="part-slots">${group.map((slot) => picker(slot, 'part')).join('')}</div>`;
       })
       .join('');
   }

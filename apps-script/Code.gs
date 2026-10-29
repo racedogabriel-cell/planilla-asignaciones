@@ -4,7 +4,7 @@
  *
  * GET:  ping | config | personas | semanas | semana&semana=YYYY-MM-DD
  * POST: saveConfig | createPersona | updatePersona | setPersonaActivo
- *       importPrograma | saveAsignacion
+ *       importPrograma | saveAsignacion | deleteSemana
  */
 const SPREADSHEET_ID = '124vmj5TaX1fuFT2SsvsA8o_i0qPHaivL5OkqR3_qHlg';
 
@@ -101,6 +101,7 @@ function doPost(event) {
       if (action === 'updatePersona') return json_(updatePersona_(body));
       if (action === 'setPersonaActivo') return json_(setPersonaActivo_(body));
       if (action === 'importPrograma') return json_(importPrograma_(body));
+      if (action === 'deleteSemana') return json_(deleteSemana_(body));
       return json_({ ok: false, error: 'Acción no válida.', message: 'action desconocida.' });
     } finally {
       lock.releaseLock();
@@ -528,6 +529,20 @@ function importPrograma_(body) {
     range.setValues(asgRows);
   }
   return { ok: true, importedWeeks: weekKeys.length, parts: progRows.length, slots: asgRows.length };
+}
+
+function deleteSemana_(body) {
+  const weekKey = isoDate_(body.weekKey);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(weekKey)) throw new Error('Indicá una semana válida.');
+  const ss = spreadsheet_();
+  const progSheet = ss.getSheetByName(SHEET_PROGRAMA);
+  const asgSheet = ss.getSheetByName(SHEET_ASIGNACIONES);
+  if (!progSheet || !asgSheet) throw new Error('Faltan las hojas del programa.');
+  const exists = dataRows_(progSheet, PROGRAMA_HEADERS.length).some((row) => sameWeek_(row[0], weekKey));
+  if (!exists) throw new Error('No se encontró esa semana.');
+  deleteWeeks_(progSheet, PROGRAMA_HEADERS.length, 0, [weekKey]);
+  deleteWeeks_(asgSheet, ASIGNACIONES_HEADERS.length, 0, [weekKey]);
+  return { ok: true, weekKey };
 }
 
 function deleteWeeks_(sheet, width, keyCol, weekKeys) {

@@ -4,7 +4,7 @@
  * Estado: En desarrollo
  * Sprint: 1
  */
-import { getWorkspace, isEndpointConfigured, saveAsignacion } from './sheets.js';
+import { deleteSemana, getWorkspace, isEndpointConfigured, saveAsignacion } from './sheets.js';
 import { sectionClass, sectionLabel } from './slots.js';
 import { escapeHtml, errorNotice, setupNotice } from './dom.js';
 
@@ -257,15 +257,25 @@ export function bindSemanas() {
     </div>`;
   }
 
+  function trashIcon() {
+    return `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M9 3.2h6l.8 1.6H20v1.7H4V4.8h4.2L9 3.2zm-2.2 5h10.4l-.8 11.1a1.4 1.4 0 0 1-1.4 1.3H8.99a1.4 1.4 0 0 1-1.4-1.3L6.8 8.2zM10 10.2v7.1h1.6v-7.1H10zm3.4 0v7.1H15v-7.1h-1.6z"/></svg>`;
+  }
+
   function render() {
     const list = state.weeks
       .map((w) => {
         const current = state.selected === w.weekKey ? 'true' : 'false';
         const stats = `${w.filledCount || 0} / ${w.slotCount || 0}`;
-        return `<button class="week-item" type="button" data-week="${escapeHtml(w.weekKey)}" aria-current="${current}">
-          <strong>${escapeHtml(w.dateLabel || w.weekKey)}</strong>
-          <span>${escapeHtml(w.bibleReading || '')} · ${escapeHtml(stats)}</span>
-        </button>`;
+        const label = w.dateLabel || w.weekKey;
+        return `<div class="week-item" aria-current="${current}">
+          <button class="week-item-select" type="button" data-week="${escapeHtml(w.weekKey)}">
+            <strong>${escapeHtml(label)}</strong>
+            <span>${escapeHtml(w.bibleReading || '')} · ${escapeHtml(stats)}</span>
+          </button>
+          <button class="week-delete" type="button" data-delete-week="${escapeHtml(w.weekKey)}" aria-label="Borrar ${escapeHtml(label)}" title="Borrar semana" ${state.busy ? 'disabled' : ''}>
+            ${trashIcon()}
+          </button>
+        </div>`;
       })
       .join('');
 
@@ -433,7 +443,55 @@ export function bindSemanas() {
     return true;
   }
 
+  function deleteErrorMessage(error) {
+    const text = String(error?.message || error || '');
+    if (/desconocida|no válida|acción no válida/i.test(text)) {
+      return 'El conector de la planilla todavía no puede borrar semanas. Actualizá Code.gs y volvé a implementar la aplicación web.';
+    }
+    return text || 'No se pudo borrar la semana.';
+  }
+
+  async function removeWeek(weekKey) {
+    if (state.busy) return;
+    const week = state.weeks.find((w) => w.weekKey === weekKey);
+    if (!week) return;
+    const label = week.dateLabel || weekKey;
+    const filled = Number(week.filledCount || 0);
+    const total = Number(week.slotCount || 0);
+    const progress = total ? ` Tiene ${filled} de ${total} asignaciones.` : '';
+    const accepted = window.confirm(
+      `¿Borrar la semana «${label}»?${progress}\n\nSe quitan el programa y las asignaciones. No se puede deshacer.`,
+    );
+    if (!accepted) return;
+
+    const index = state.weeks.findIndex((w) => w.weekKey === weekKey);
+    const wasSelected = state.selected === weekKey;
+    const neighbor = state.weeks[index + 1] || state.weeks[index - 1] || null;
+    state.busy = true;
+    state.error = '';
+    render();
+    try {
+      const data = await deleteSemana(weekKey);
+      if (data.ok === false) throw new Error(data.message || data.error);
+      state.weeks = state.weeks.filter((w) => w.weekKey !== weekKey);
+      state.busy = false;
+      if (wasSelected) {
+        state.selected = neighbor?.weekKey || null;
+        state.semana = null;
+        render();
+        if (state.selected) await loadWeek(state.selected);
+        return;
+      }
+      render();
+    } catch (error) {
+      state.busy = false;
+      state.error = deleteErrorMessage(error);
+      render();
+    }
+  }
+
   async function loadWeek(weekKey) {
+    if (state.busy) return;
     state.busy = true;
     try {
       const data = await getWorkspace(weekKey);
@@ -534,9 +592,15 @@ export function bindSemanas() {
   }
 
   root.addEventListener('click', (event) => {
+    const deleteBtn = event.target.closest('[data-delete-week]');
+    if (deleteBtn) {
+      event.preventDefault();
+      removeWeek(deleteBtn.dataset.deleteWeek);
+      return;
+    }
     const weekBtn = event.target.closest('[data-week]');
     if (weekBtn) {
-      loadWeek(weekBtn.dataset.week);
+      if (!state.busy) loadWeek(weekBtn.dataset.week);
       return;
     }
     const option = event.target.closest('.person-combo-option[data-id]');

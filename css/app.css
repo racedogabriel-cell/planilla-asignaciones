@@ -20,20 +20,61 @@
 }
 
 .week-item {
-  display: block;
+  display: flex;
+  align-items: stretch;
   width: 100%;
-  text-align: left;
-  border: 0;
   border-bottom: 1px solid var(--line);
   background: transparent;
-  padding: 12px 14px;
+}
+
+.week-item[aria-current='true'] { background: var(--primary-soft); }
+
+.week-item-select {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  padding: 12px 6px 12px 14px;
   color: inherit;
   cursor: pointer;
 }
 
-.week-item[aria-current='true'] { background: var(--primary-soft); }
 .week-item strong { display: block; font-size: 0.92rem; }
 .week-item span { display: block; color: var(--muted); font-size: 0.78rem; margin-top: 4px; }
+
+.week-delete {
+  flex: 0 0 auto;
+  align-self: center;
+  width: 34px;
+  height: 34px;
+  margin-right: 6px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #8b949e;
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+
+.week-delete svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.week-delete:hover,
+.week-delete:focus-visible {
+  background: #fde8e6;
+  color: var(--danger);
+  outline: none;
+}
+
+.week-delete:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
 
 .week-program.card {
   padding: 12px 14px 14px;

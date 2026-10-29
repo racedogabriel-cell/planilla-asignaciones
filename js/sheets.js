@@ -135,3 +135,7 @@ export function importPrograma(payload) {
 export function saveAsignacion(weekKey, huecoClave, personaId) {
   return post({ action: 'saveAsignacion', weekKey: normalizeWeekKey(weekKey), huecoClave, personaId });
 }
+
+export function deleteSemana(weekKey) {
+  return post({ action: 'deleteSemana', weekKey: normalizeWeekKey(weekKey) });
+}

@@ -191,26 +191,37 @@ function extractDuration(text) {
   return match ? Number(match[1]) : null;
 }
 
+function monthOf(name) {
+  return MONTHS[normalize(name)] || 0;
+}
+
 function parseDateRange(dateLabel, year) {
-  const sameMonth = /^(\d+)\s*[-–—]\s*(\d+)\s+DE\s+([A-ZÁÉÍÓÚÑ]+)/i.exec(dateLabel);
+  const monthName = '([A-ZÁÉÍÓÚÑ]+)';
+  const yearPart = '(?:\\s+DE\\s+(20\\d{2}))?';
+  const sameMonth = new RegExp(`^(\\d+)\\s*[-–—]\\s*(\\d+)\\s+DE\\s+${monthName}${yearPart}`, 'i').exec(dateLabel);
   if (sameMonth) {
-    const month = MONTHS[normalize(sameMonth[3])];
+    const month = monthOf(sameMonth[3]);
     if (month) {
+      const y = sameMonth[4] ? Number(sameMonth[4]) : year;
       return {
-        startDate: isoDate(year, month, Number(sameMonth[1])),
-        endDate: isoDate(year, month, Number(sameMonth[2])),
+        startDate: isoDate(y, month, Number(sameMonth[1])),
+        endDate: isoDate(y, month, Number(sameMonth[2])),
       };
     }
   }
-  const cross = /^(\d+)\s+DE\s+([A-ZÁÉÍÓÚÑ]+)\s+A\s+(\d+)\s+DE\s+([A-ZÁÉÍÓÚÑ]+)/i.exec(dateLabel);
+  const cross = new RegExp(
+    `^(\\d+)\\s+DE\\s+${monthName}${yearPart}\\s+A\\s+(\\d+)\\s+DE\\s+${monthName}${yearPart}`,
+    'i',
+  ).exec(dateLabel);
   if (cross) {
-    const m1 = MONTHS[normalize(cross[2])];
-    const m2 = MONTHS[normalize(cross[4])];
+    const m1 = monthOf(cross[2]);
+    const m2 = monthOf(cross[5]);
     if (m1 && m2) {
-      const y2 = m2 < m1 ? year + 1 : year;
+      const y1 = cross[3] ? Number(cross[3]) : year;
+      const y2 = cross[6] ? Number(cross[6]) : m2 < m1 ? y1 + 1 : y1;
       return {
-        startDate: isoDate(year, m1, Number(cross[1])),
-        endDate: isoDate(y2, m2, Number(cross[3])),
+        startDate: isoDate(y1, m1, Number(cross[1])),
+        endDate: isoDate(y2, m2, Number(cross[4])),
       };
     }
   }
@@ -330,10 +341,12 @@ function toPublication(model) {
     version: 1,
     title: model.title,
     language: model.language || 'es',
-    weeks: model.weeks.map((week, index) => {
-      const weekKey = week.startDate || `semana-${String(index + 1).padStart(2, '0')}`;
+    weeks: model.weeks.map((week) => {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(week.startDate || '')) {
+        throw new Error(`No se pudo leer la fecha de «${week.dateLabel || 'una semana'}».`);
+      }
       return {
-        weekKey,
+        weekKey: week.startDate,
         dateLabel: week.dateLabel,
         startDate: week.startDate || '',
         endDate: week.endDate || '',

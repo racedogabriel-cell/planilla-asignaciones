@@ -7,7 +7,7 @@
 import { getConfig, importPrograma, isEndpointConfigured } from './sheets.js';
 import { generateSlotsForPublication } from './slots.js';
 import { escapeHtml, errorNotice, setupNotice } from './dom.js';
-import { fileLooksLikeZip, isEpubFile, parseEpubFile } from './epub-parser.js';
+import { fileLooksLikeZip, isEpubFile, parseEpubFile } from './epub-parser.js?v=3';
 
 export function importarView() {
   return `<div id="import-root"></div>`;
@@ -34,7 +34,7 @@ export function bindImportar() {
         </div>`
       : '';
     root.innerHTML = `
-      <div class="notice">Importar v2 — EPUB o JSON. Elegí la Guía de actividades. No se sube el archivo a Sheets: solo el programa recortado.</div>
+      <div class="notice">Importar v3 — EPUB o JSON. Elegí la Guía de actividades. No se sube el archivo a Sheets: solo el programa recortado.</div>
       <form class="card" id="import-form" style="margin-top:14px">
         <label>Archivo EPUB o JSON
           <input class="field" id="import-file" type="file" accept=".epub,.jwpub,application/epub+zip,application/json,.json">

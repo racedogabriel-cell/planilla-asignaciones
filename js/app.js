@@ -1,4 +1,4 @@
-import { navItems, renderRoute } from './router.js';
+import { navItems, renderRoute } from './router.js?v=3';
 
 const nav = document.querySelector('#primary-navigation');
 nav.innerHTML = navItems

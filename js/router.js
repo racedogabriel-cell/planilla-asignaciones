@@ -1,6 +1,6 @@
 import { semanasView, bindSemanas } from './semanas.js';
 import { personasView, bindPersonas } from './personas.js';
-import { importarView, bindImportar } from './importar.js';
+import { importarView, bindImportar } from './importar.js?v=3';
 import { imprimirView, bindImprimir } from './imprimir.js';
 import { configuracionView, bindConfiguracion } from './configuracion.js';
 
